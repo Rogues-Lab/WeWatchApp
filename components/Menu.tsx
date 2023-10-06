@@ -12,7 +12,7 @@ import {
   IonToolbar,
 } from '@ionic/react';
 import { useEffect, useState } from 'react';
-import { cog, bookmark, map,home, list, logOut, logIn, newspaper, person, earthOutline, construct, chatbubbles, chatbox, create } from 'ionicons/icons';
+import { cog, bookmark, map,home, list, logOut, logIn, newspaper, person, earthOutline, construct, chatbubbles, chatbox, create, callOutline, call } from 'ionicons/icons';
 
 import { useUser, useSupabaseClient } from '@supabase/auth-helpers-react'
 import { useRouter } from 'next/router';
@@ -68,6 +68,11 @@ const pages = [
     icon: newspaper,
     url: '/tabs/terms',
   },
+  {
+    title: 'Home',
+    icon: home,
+    url: '/tabs/home',
+  }
 ];
 
 
@@ -83,6 +88,10 @@ const Menu = () => {
   const router = useRouter();
   const goToAdmin = () => {
     router.push('/admin/dashboard');
+  }
+
+  const callPoPo = () => {
+    router.push('tel:000');
   }
 
   const signOut = async() => {
@@ -145,6 +154,13 @@ const Menu = () => {
             </IonMenuToggle>
           ))}
 
+          <IonMenuToggle autoHide={false} key='popo'>
+              <IonItem onClick={callPoPo} detail={false} lines="none">
+                <IonIcon icon={call} slot="start" />
+                <IonLabel>Emergency</IonLabel>
+              </IonItem>
+            </IonMenuToggle>
+
           { user &&
             <IonMenuToggle autoHide={false} key='user'>
               <IonItem onClick={signOut} detail={false} lines="none">
@@ -162,6 +178,7 @@ const Menu = () => {
               </IonItem>
             </IonMenuToggle>
           }
+
 
         </IonList>
       </IonContent>

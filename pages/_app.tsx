@@ -71,23 +71,28 @@ function MyApp({ Component, pageProps }) {
 
   const requestPermissions = async () => {
     let permStatus = await PushNotifications.checkPermissions();
-
-    if (permStatus.receive === 'prompt') {
-      permStatus = await PushNotifications.requestPermissions();
-    }
+    console.log('permStatus', permStatus?.receive);
+    let permReqStatus = await PushNotifications.requestPermissions();
+    console.log('permReqStatus', permReqStatus?.receive);
+    
+    await registerPush();  
+    // if (permStatus.receive === 'prompt') {
+    //   permReqStatus = await PushNotifications.requestPermissions();
+    // }
   
-    if (permStatus.receive === 'granted') {
-      registerPush();  
-    } else {
-      console.error('User denied permissions!');
-    }
-
+    // if (permStatus.receive === 'granted') {
+    //   registerPush();  
+    // } else {
+    //   console.error('User denied permissions!');
+    // }
   };  
 
   useEffect(() => {
     // Request permission to use push notifications
     if (Capacitor.getPlatform() !== 'web') {
-      requestPermissions();
+      requestPermissions().then(() => {
+        console.log('requestPermissions done');
+      });
     }
   }, []);
 

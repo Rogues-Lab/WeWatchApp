@@ -22,7 +22,8 @@
     }
   },
   "server": {
-    "hostname": "wewatchapp.com"
+    "hostname": "wewatchapp.com",
+    "androidScheme": "http"
   },
   "cordova": {}
 }

@@ -24,12 +24,10 @@ import { ErrorCard } from '../cards/ErrorCard';
 import UserProfileAvatar from '../ui/UserProfileAvatar';
 import * as selectors from '../../store/selectors';
   
-const Report = ({ open, onDidDismiss, reportMode="person", incident=null, personId=null, person=null, cover_photo_url=null, file=null, message=null }) => {  
-
+  const RemoveUser = ({ open, onDidDismiss, reportMode="removeAccount", incident=null, personId=null, person=null, cover_photo_url=null, file=null, message=null }) => {  
+  
     const [reason, setReason] = useState('');
     const authUser = useUser();
-    const {userIds} = useUserStore({userId: person?.id});
-    const authUserProfile = useStoreState(UserStore, selectors.getAuthUserProfile);
     const supabase = useSupabaseClient();
 
     const [error, setError] = useState("");
@@ -55,7 +53,7 @@ const Report = ({ open, onDidDismiss, reportMode="person", incident=null, person
 
        if(data && data[0]){
         //Notify User
-        setToastMessage("Lodged Report #"+data[0]?.id);
+        setToastMessage("Lodged Request #"+data[0]?.id);
         setIsToastOpen(true);
        }
         if (error){
@@ -75,25 +73,9 @@ const Report = ({ open, onDidDismiss, reportMode="person", incident=null, person
     const newReportData = () => {
 
 
-      let object_type;
-      let object_id;
-      if (reportMode == 'cover_image'){
-        object_type='incident';
-        object_id=incident?.id;
-      } else if (reportMode == 'incident'){
-        object_type='incident';
-        object_id=incident?.id;
-      } else if (reportMode == 'person'){
-        object_type='person';
-        object_id = personId ? personId : person?.id;
-      } else if (reportMode == 'message'){
-        object_type='message';
-        object_id=message?.id;
-      } else if (reportMode == 'image'){
-        object_type='image';
-        object_id=file?.id;
-      }
-
+      const object_type='person';
+      let object_id = personId ? personId : person?.id;
+      
       let reportJson = {
         user_id: authUser?.id ,
         reason: reason,
@@ -105,21 +87,6 @@ const Report = ({ open, onDidDismiss, reportMode="person", incident=null, person
       return (reportJson)
     }
 
-    const displayTitle = () => {
-      if (reportMode == 'cover_image'){
-        return "Cover Image";
-      } else if (reportMode == 'incident'){
-        return "Incident";
-      } else if (reportMode == 'person'){
-        return "Person";
-      } else if (reportMode == 'message'){
-        return "Message";
-      } else if (reportMode == 'image'){
-        return "Image"
-      }
-       
-    }
-
     const handleCancel = () => {
       resetData();
       onDidDismiss();
@@ -129,7 +96,7 @@ const Report = ({ open, onDidDismiss, reportMode="person", incident=null, person
       <IonModal isOpen={open} onDidDismiss={onDidDismiss}>
         <IonHeader>
           <IonToolbar>
-            <IonTitle>Report {displayTitle()}</IonTitle>
+            <IonTitle>Remove my Account</IonTitle>
             <IonButton slot="end" fill="clear" color="primary" onClick={onDidDismiss}>
               <IonIcon icon={close} />
             </IonButton>
@@ -142,7 +109,7 @@ const Report = ({ open, onDidDismiss, reportMode="person", incident=null, person
                 <div>
                   {/* <h3 className="text-lg font-medium leading-6 text-gray-900">My Public Profile</h3> */}
                   <p className="mt-1 max-w-2xl text-sm text-gray-500 dark:text-gray-200">
-                    This information will be sent to moderators. {personId} : {person?.id}
+                    This information will be sent to moderators for deletion.
                   </p>
                 </div>
 
@@ -150,7 +117,7 @@ const Report = ({ open, onDidDismiss, reportMode="person", incident=null, person
 
                   <div className="sm:grid sm:grid-cols-3 sm:items-start sm:gap-4 sm:border-t sm:border-gray-200 sm:pt-5">
                     <label htmlFor="about" className="block text-sm font-medium text-gray-700 dark:text-gray-300 sm:mt-px sm:pt-2">
-                      Reason
+                      Reason for Account deletion
                     </label>
                     <div className="mt-1 sm:col-span-2 sm:mt-0">
                       <textarea
@@ -204,5 +171,5 @@ const Report = ({ open, onDidDismiss, reportMode="person", incident=null, person
     );
   };
   
-  export default Report;
+  export default RemoveUser;
   

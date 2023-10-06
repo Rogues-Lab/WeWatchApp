@@ -177,6 +177,10 @@ export const MapDraggableMarker = ({initialLat=defaultInitialLat, initialLng=def
         
     
         setMarker(mapMarker);
+
+        setTimeout(function(){
+          draggableMap.current.resize();
+        }, 200);
     
       }, [draggableMap, draggableMapContainer]);
 
@@ -199,15 +203,16 @@ export const MapDraggableMarker = ({initialLat=defaultInitialLat, initialLng=def
       }, []);
 
 
-      draggableMap.current?.on('render', function () {
+      draggableMap.current?.on('idle', function () {
         // Resize to fill space
+        console.log('idle resize')
         draggableMap.current.resize();
       });
 
-      draggableMap.current?.on('load', function () {
-        // Resize to fill space
-        draggableMap.current.resize();
-      });
+      // draggableMap.current?.on('load', function () {
+      //   // Resize to fill space
+      //   draggableMap.current.resize();
+      // });
 
     return (
         <div className="area-map-section h-64">

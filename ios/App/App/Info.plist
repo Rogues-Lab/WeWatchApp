@@ -27,17 +27,17 @@
 	<key>LSRequiresIPhoneOS</key>
 	<true/>
 	<key>NSAppleMusicUsageDescription</key>
-	<string>Allow We Watch to access your photo</string>
+	<string>Allow WeWatch to access your camera and photos when creating an incident, and setting your profile picture</string>
 	<key>NSCameraUsageDescription</key>
-	<string>Allow We Watch to access your photo</string>
+	<string>Allow WeWatch to access your camera and photos when creating an incident, and setting your profile picture</string>
 	<key>NSLocationAlwaysUsageDescription</key>
 	<string>Allow We Watch to access your location to search for nearby incidents</string>
 	<key>NSLocationWhenInUseUsageDescription</key>
 	<string>Allow We Watch to access your location to  search for nearby incidents</string>
 	<key>NSPhotoLibraryAddUsageDescription</key>
-	<string>Allow We Watch to access your photo</string>
+	<string>Allow WeWatch to access your camera and photos when creating an incident, and setting your profile picture</string>
 	<key>NSPhotoLibraryUsageDescription</key>
-	<string>Allow We Watch to access your photo</string>
+	<string>Allow WeWatch to access your camera and photos when creating an incident, and setting your profile picture</string>
 	<key>UIBackgroundModes</key>
 	<array>
 		<string>fetch</string>

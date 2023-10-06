@@ -142,6 +142,8 @@ import MessageRow from "./MessageRow";
             </tbody>
           </table>
         </div>
+        <div className="py-10 spacer">
+        </div>
       </div>
     )
   }

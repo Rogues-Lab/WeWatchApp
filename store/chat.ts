@@ -238,8 +238,6 @@ export const useChatStore = (props) => {
 export const fetchChats = async (setState, supabase) => {
   try {
     let { data } = await supabase.from('chats').select('*').order('inserted_at');
-
-    console.log("ff", data)
     if (setState) setState(data)
     return data
   } catch (error) {

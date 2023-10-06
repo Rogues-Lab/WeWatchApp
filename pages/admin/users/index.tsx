@@ -110,6 +110,8 @@ import UserProfileAvatar from "../../../components/ui/UserProfileAvatar";
             </tbody>
           </table>
         </div>
+        <div className="py-10 spacer">
+        </div>
       </div>
     )
   }

@@ -24,6 +24,8 @@ import EditDetail from './EditDetail';
 import { useUser } from '@supabase/auth-helpers-react';
 import { useStoreState } from 'pullstate';
 import { UserStore, updateLocation, updateTab } from '../../store/user';
+import { TabBarChangedEventDetail } from '@ionic/core';
+
 
 import * as selectors from '../../store/selectors';
 import { checkLocationPermissions, getCurrentLocation } from '../util/location';
@@ -44,8 +46,9 @@ const Tabs = ({history}) => {
     asnycfn();
   }, []);
 
-  const handleTabsDidChange = () => {
-    if (location.pathname === '/tabs/map') {
+ 
+  const handleTabsDidChange = (e: CustomEvent<TabBarChangedEventDetail>) => {
+    if (e.detail.tab === 'tab4') {
       updateTab(Math.random());
     }
   }

@@ -33,6 +33,7 @@ import {
   import { useStoreState } from 'pullstate';
   import * as selectors from '../../store/selectors';
 import { set } from 'date-fns';
+import RemoveUser from '../modals/RemoveUser';
 
   const ProfilePage = ({history}) => {
  
@@ -50,6 +51,8 @@ import { set } from 'date-fns';
     const [ about, setAbout] = useState<string >('');
     const [ location, setLocation] = useState<any >();
     const [ pushEnabled, setPushEnabled] = useState<boolean>(false);
+
+  const [openReporter, setOpenReporter] = useState(false);
 
 
     const [ distance, setDistance] = useState<number >();
@@ -335,7 +338,18 @@ import { set } from 'date-fns';
               </div>
 
               <div className="pb-4">
-                <div className="flex justify-end">
+              <div className="flex justify-between">
+                  <div className='flex w-50'>
+                      <button
+                        type="button"
+                        onClick={() => setOpenReporter(true)}
+                        className="rounded-md border border-gray-300 bg-white py-2 px-4 text-sm font-medium text-gray-700 shadow-sm hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-ww-secondary focus:ring-offset-2"
+                      >
+                        Delete
+                      </button>
+                  </div>
+                
+                  <div className='flex w-50'>
                   <button
                     type="button"
                     onClick={handleCancel}
@@ -343,17 +357,20 @@ import { set } from 'date-fns';
                   >
                     Cancel
                   </button>
-                  
+
                   <button
                     type="submit"
                     className="ml-3 inline-flex justify-center rounded-md border border-transparent bg-ww-primary  py-2 px-4 text-sm font-medium text-white shadow-sm hover:bg-ww-secondary focus:outline-none focus:ring-2 focus:ring-ww-secondary focus:ring-offset-2"
                   >
                     Save
                   </button>
+                  </div>
                 </div>
               </div>
+              
             </form>
           }
+          <RemoveUser open={openReporter} onDidDismiss={() => setOpenReporter(false)} person={authUser}/>
           <IonToast
             isOpen={isToastOpen}
             message={toastMessage}

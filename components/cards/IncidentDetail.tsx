@@ -172,6 +172,10 @@ export const IncidentDetail = ({incident, files, supabase}) => {
       }
     }
 
+    setTimeout(function(){
+      map.current.resize();
+    }, 200);
+
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [incident]);
 

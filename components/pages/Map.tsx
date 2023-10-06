@@ -45,7 +45,7 @@ import { UserStore, updateLocation } from '../../store/user';
 import { getCurrentLocation } from '../util/location';
 
 
-const MapPage = ({triggerMap: number, history}) => {
+const MapPage = ({history}) => {
   const incidents = useStoreState(IncidentStore, selectors.getIncidents);
   const updatedTab = useStoreState(UserStore, selectors.getUpdatedTab);
   const [showNotifications, setShowNotifications] = useState(false);
@@ -59,8 +59,6 @@ const MapPage = ({triggerMap: number, history}) => {
   const [lat, setLat] = useState<number | undefined>();
   const [distance, setDistance] = useState(10000);
   const [zoom, setZoom] = useState(13);
-  const [markers, setMarkers] = useState<any[]>([]);
-  const [markersMap, setMarkersMap] = useState<Map<number,mapboxgl.Marker>>(new Map());
 
   const [userMarker, setUserMarker] = useState<mapboxgl.Marker | undefined>();
 
@@ -87,10 +85,6 @@ const MapPage = ({triggerMap: number, history}) => {
   const user = useUser();
   const {userId} = useNotificationsStore({userId: user?.id});
   const activeNotifications = useStoreState(NotificationStore, selectors.getActiveNotifications)
-
-
-  const [width, setWidth] = useState<undefined|number>();
-  const [height, setHeight] = useState<undefined|number>();
   
 
   const geoSearch = async () => {
@@ -167,12 +161,6 @@ const MapPage = ({triggerMap: number, history}) => {
     { maxWait: 2000 }
   );
 
-  const getScreenSize = () => {
-    const width = window.innerWidth || document.documentElement.clientWidth || document.body.clientWidth;
-    const height = window.innerHeight || document.documentElement.clientHeight || document.body.clientHeight;
-    return { width, height };
-  };
-
   const loadMap = async (lng, lat) => {
     map.current = new mapboxgl.Map({
       accessToken: mapboxglAccessToken,
@@ -207,6 +195,14 @@ const MapPage = ({triggerMap: number, history}) => {
       // Add the loaded image to the style's sprite with the ID 'pin-wewatch'.
       map.current.addImage('pin-wewatch', image);
     });
+
+    setTimeout(function(){
+    	mapResize();
+    }, 100);
+    
+    setTimeout(function(){
+    	debouncedMapResize();
+    }, 1000);
   }
 
   useEffect(() => {
@@ -224,12 +220,7 @@ const MapPage = ({triggerMap: number, history}) => {
     setLat(latitude);
     loadMap(longitude,latitude);
 
-    const screenSize = getScreenSize();
-    console.log('Screen width:', screenSize.width);
-    console.log('Screen height:', screenSize.height);
-    if (width == undefined) { setWidth(screenSize.width)};
-    if (height == undefined) { setHeight(screenSize.height - 156);}
-
+  
   }, []);
 
   useEffect(() => {
@@ -268,62 +259,38 @@ const MapPage = ({triggerMap: number, history}) => {
 
 
   useEffect(() => {
-    // if (!map.current) return; // initialize map only once
-    //old approach
-    // console.log("draw markers");
-    // markers?.map(marker => {
-    //   marker.remove();
-    // });
-  
-    // const addPopup = (el) => {
-    //   const placeholder = document.createElement('div');
-    //   let root =  createRoot(placeholder)
-    //   root.render(el);
-    //   const popup = new mapboxgl.Popup({ offset: 25, className: 'incidentPopup', closeButton: false, closeOnClick: true})
-    //           .setDOMContent(placeholder)
-    //   return popup
-    // }
-
-    // // const newMarkers: any[] = [];
-    // setMarkersMap(new Map());
-    // incidents?.map(mapIncident => {
-    //   const m_popup = addPopup(<MapInfo incident={mapIncident} history={history} />)
-    //   const markerColor = displayLevelColor(mapIncident);
-    //   const marker = new mapboxgl.Marker({color: markerColor})
-    //     .setLngLat([mapIncident.longitude, mapIncident.latitude])
-    //     .setPopup(m_popup)
-    //     .addTo(map.current);
-    //   // newMarkers.push(marker);
-    //   markersMap.set(mapIncident.id,marker);
-    // });
- 
-    // setMarkers(newMarkers);
     loadSourceData(incidents);
-
   // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [incidents]);
 
-  const mapResize = (attempt = 0, max = 5) => {
+  const debouncedMapResize = useDebouncedCallback(
+    () => {
+      mapResize();
+    },
+    200,
+    // The maximum time func is allowed to be delayed before it's invoked:
+    { maxWait: 1000 }
+  );
+
+  const mapResize = () => {
     if (!map.current) return;
+    console.log('resize map')
     map.current.resize();
-    if (attempt < max) {
-      console.log(`delayed resize attempt ${attempt + 1}`);
-      setTimeout(() => mapResize(attempt + 1), 500);
-    }
   }
 
   useEffect(() => {
-    mapResize(0,6);
+    console.log('updatedTab') 
+    setTimeout(() => debouncedMapResize(), 500);
   }, [updatedTab]);
 
-  map.current?.on('render', function () {
+  map.current?.on('idle', function () {
     // Resize to fill space
-    mapResize(2,3);
+    console.log('idle') 
+    debouncedMapResize();
   });
 
-
   map.current?.on('load', function () {
-    mapResize(0,1);
+    console.log('load map')
     debouncedSearch();
     setLoaded(true);
     loadSources();
@@ -499,8 +466,8 @@ const MapPage = ({triggerMap: number, history}) => {
             List
           </IonSegmentButton>
         </IonSegment>
-        <div className="map-section" style={{width: width, height: height}} >
-          <div ref={mapContainer} className="map-container" style={{width: width, height: height}} />
+        <div className="map-section" >
+          <div ref={mapContainer} className="map-container"  />
         </div>
         {/*-- fab placed to the (vertical) center and end --*/}
         <IonFab  vertical="bottom" horizontal="center" slot="fixed">
