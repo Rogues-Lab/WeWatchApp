@@ -6,7 +6,7 @@ import TelegramBot from 'node-telegram-bot-api';
 // Initialize Supabase client
 const supabase = createClient(process.env.NEXT_PUBLIC_SUPABASE_URL, process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY);
 const telegramBotApi = process.env.TELEGRAM_BOT_API;
-const telegramBotChannel = process.env.TELEGRAM_BOT_API;
+const telegramBotChannel = process.env.TELEGRAM_CHAT_ID;
 
 // Initialize Firebase Admin SDK
 const serviceAccount = JSON.parse(process.env.FIREBASE_SERVICE_ACCOUNT);
@@ -99,7 +99,7 @@ export default async function processIncidentCreation(req: NextApiRequest, res: 
 
     // Send message using Firebase Admin Messaging
     const resp = await admin.messaging().sendEachForMulticast(message);
-    console.log("resp", resp)
+    console.log("send message to ", userTokens)
 
 
     try {
@@ -107,7 +107,7 @@ export default async function processIncidentCreation(req: NextApiRequest, res: 
       const bot = new TelegramBot(telegramBotApi, { polling: false });
       const telegramMessage = `New Incident #${incident.id}`;
       const teleRepsonse = await bot.sendMessage(telegramBotChannel, telegramMessage);
-
+      console.log("send bot alert")
     } catch (err) {
       // Handle errors
       console.error("telegram alert error", err);

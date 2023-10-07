@@ -34,7 +34,7 @@ export default async function processReportCreation(req: NextApiRequest, res: Ne
     const bot = new TelegramBot(telegramBotApi, { polling: false });
     const message = `New UGC Report #${report.id}`;
     const teleRepsonse = await bot.sendMessage(telegramChatId, message);
-    // console.log("bot", telegramChatId, message, teleRepsonse);
+    console.log("send bot alert")
 
     // Return success response
     res.status(200).json({ message: 'Process report' });
