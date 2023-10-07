@@ -105,8 +105,9 @@ export default async function processIncidentCreation(req: NextApiRequest, res: 
     try {
       // Send Telegram message
       const bot = new TelegramBot(telegramBotApi, { polling: false });
-      const telegramMessage = `New Incident #:${incident.id}`;
-      bot.sendMessage(telegramBotChannel, telegramMessage);
+      const telegramMessage = `New Incident #${incident.id}`;
+      const teleRepsonse = await bot.sendMessage(telegramBotChannel, telegramMessage);
+
     } catch (err) {
       // Handle errors
       console.error("telegram alert error", err);
