@@ -46,6 +46,7 @@
     "luxon": "^2.4.0",
     "mapbox-gl": "^2.15.0",
     "nextjs": "0.0.3",
+    "node-telegram-bot-api": "^0.63.0",
     "postcss": "^8.4.30",
     "react": "^18.2.0",
     "react-copy-to-clipboard": "^5.1.0",

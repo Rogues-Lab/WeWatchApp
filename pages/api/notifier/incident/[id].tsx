@@ -1,9 +1,12 @@
 import { NextApiRequest, NextApiResponse } from 'next';
 import { createClient } from '@supabase/supabase-js';
 import admin from 'firebase-admin';
+import TelegramBot from 'node-telegram-bot-api';
 
 // Initialize Supabase client
 const supabase = createClient(process.env.NEXT_PUBLIC_SUPABASE_URL, process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY);
+const telegramBotApi = process.env.TELEGRAM_BOT_API;
+const telegramBotChannel = process.env.TELEGRAM_BOT_API;
 
 // Initialize Firebase Admin SDK
 const serviceAccount = JSON.parse(process.env.FIREBASE_SERVICE_ACCOUNT);
@@ -94,12 +97,24 @@ export default async function processIncidentCreation(req: NextApiRequest, res: 
 
 
 
-      // Send message using Firebase Admin Messaging
-     const resp = await admin.messaging().sendEachForMulticast(message);
-     console.log("resp", resp)
+    // Send message using Firebase Admin Messaging
+    const resp = await admin.messaging().sendEachForMulticast(message);
+    console.log("resp", resp)
 
-      // Return success response
-      res.status(200).json({ message: 'Push notification sent. #' + userTokens.length });
+
+    try {
+      // Send Telegram message
+      const bot = new TelegramBot(telegramBotApi, { polling: false });
+      const telegramMessage = `New Incident #:${incident.id}`;
+      bot.sendMessage(telegramBotChannel, telegramMessage);
+    } catch (err) {
+      // Handle errors
+      console.error("telegram alert error", err);
+    }
+
+
+    // Return success response
+    res.status(200).json({ message: 'Push notification sent. #' + userTokens.length });
   } catch (err) {
     // Handle errors
     res.status(500).json({ error: err.message });
