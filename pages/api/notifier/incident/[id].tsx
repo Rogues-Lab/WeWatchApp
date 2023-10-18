@@ -65,10 +65,11 @@ export default async function processIncidentCreation(req: NextApiRequest, res: 
     //   throw new Error(userError.message);
     // }
     //     if (user?.push_token) {
-    if(pushUsers && pushUsers.length > 0){
-    const userTokens = pushUsers.map((user) => user.push_token);
-    // Construct message payload
-    const message = {
+  let userTokens =[];
+  if(pushUsers && pushUsers.length > 0){
+      userTokens = pushUsers.map((user) => user.push_token);
+      // Construct message payload
+      const message = {
       data: {
         type: 'incident',
         incident_id: ""+incident?.id,
@@ -93,7 +94,7 @@ export default async function processIncidentCreation(req: NextApiRequest, res: 
         }
       },
       tokens: userTokens
-    };
+      };
 
     // Send message using Firebase Admin Messaging
     const resp = await admin.messaging().sendEachForMulticast(message);
