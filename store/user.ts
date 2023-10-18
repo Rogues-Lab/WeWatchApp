@@ -148,6 +148,40 @@ export const updateUser = async (authUser) => {
   }
 }
 
+export const removeUser1 = async (userId, supabase) => {
+  try {
+
+    const { data, error } = await supabase.from('users').select(`*`).in('id', userId)
+
+    // TODO CASCADE DELETE
+    // userId = '9af98cc8-4734-40d6-ada9-9626650136d4'
+    // delete from public.files where user_id in ('9af98cc8-4734-40d6-ada9-9626650136d4');
+    // delete from public.notifications where user_id in ('9af98cc8-4734-40d6-ada9-9626650136d4');
+    // delete from public.messages where user_id in ('9af98cc8-4734-40d6-ada9-9626650136d4');
+    // delete from public.chat_members where user_id in ('9af98cc8-4734-40d6-ada9-9626650136d4');
+    // delete from public.chats where user_id in ('9af98cc8-4734-40d6-ada9-9626650136d4');
+    // delete from public.incidents where user_id in ('9af98cc8-4734-40d6-ada9-9626650136d4');
+    // delete from public.reports where user_id in ('9af98cc8-4734-40d6-ada9-9626650136d4');
+    // delete from public.users where id in ('9af98cc8-4734-40d6-ada9-9626650136d4');
+    // delete from auth.users where id in ('9af98cc8-4734-40d6-ada9-9626650136d4');
+
+
+    // TODO remove deleted user from UserStore
+  } catch (error) {
+    console.log('error', error)
+  }
+}
+
+export const removeUser = async (userId: string, supabase) => {
+  try {
+    const result = await supabase.rpc('remove_user', { user_id: userId});
+    // TODO remove deleted user from UserStore
+    return result;
+  } catch (error) {
+    console.log('error', error);
+  }
+};
+
 export const updatePushToken = async (pushToken) => {
   try {
     UserStore.update(s => {
