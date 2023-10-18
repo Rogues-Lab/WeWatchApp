@@ -65,7 +65,7 @@ export default async function processIncidentCreation(req: NextApiRequest, res: 
     //   throw new Error(userError.message);
     // }
     //     if (user?.push_token) {
-
+    if(pushUsers && pushUsers.length > 0){
     const userTokens = pushUsers.map((user) => user.push_token);
     // Construct message payload
     const message = {
@@ -95,14 +95,14 @@ export default async function processIncidentCreation(req: NextApiRequest, res: 
       tokens: userTokens
     };
 
-
-
     // Send message using Firebase Admin Messaging
     const resp = await admin.messaging().sendEachForMulticast(message);
     console.log("send message to ", userTokens)
+  } else {
+    console.log('no activated users to send to');
+  }
 
-
-    try {
+  try {
       // Send Telegram message
       const bot = new TelegramBot(telegramBotApi, { polling: false });
       const telegramMessage = `New Incident #${incident.id} - ${incident.name}`;
