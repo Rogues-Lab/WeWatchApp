@@ -268,7 +268,7 @@ export const IncidentDetail = ({incident, files, supabase}) => {
             When             
         </label>
         <div id="when" className="">
-          <ToggleDateDisplay input_date={incident.inserted_at} />
+          <ToggleDateDisplay input_date={incident.incident_at} />
         </div>
         </div>
 
