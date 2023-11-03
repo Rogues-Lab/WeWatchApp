@@ -179,7 +179,7 @@ import HomeNonUser from '../auth/HomeNonUser';
           { !loading && localIncidents && localIncidents.length === 0 && authUserProfile && (authUserProfile.longitude == null || authUserProfile.longitude == 0) &&
             <Card className="my-4 mx-auto" key="profile-location">
               <div className="px-4 pt-10 pb-4  rounded-xl ">
-                <h2 className="font-bold text-l text-gray-800 dark:text-gray-100">We need you location..</h2>
+                <h2 className="font-bold text-l text-gray-800 dark:text-gray-100">We need your location..</h2>
                 <p className="font-bold text-gray-800 dark:text-gray-100">head over to your profile to add it</p>
               </div>
             </Card>
