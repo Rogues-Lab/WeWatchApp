@@ -39,7 +39,7 @@ const MapInfo = (props) => {
         <h2 className="text-gray-800 bg-white dark:bg-black dark:text-white">{displayName}</h2>
         
         <div className="text-ww-primary float-right">
-          {formatDistanceToNow(new Date(incident.inserted_at),{addSuffix: true})}
+          {formatDistanceToNow(new Date(incident.incident_at),{addSuffix: true})}
         </div>
       </div>
     </div>
