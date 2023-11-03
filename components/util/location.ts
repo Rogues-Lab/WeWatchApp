@@ -37,7 +37,8 @@ export const getCurrentLocation = async () => {
     const platform = Capacitor.getPlatform();
     console.log(`Current platform: ${platform}`);
     if (platform === 'ios' || platform === 'android') {
-        const position = await Geolocation.getCurrentPosition();
+        const positionArgs = {enableHighAccuracy: true}
+        const position = await Geolocation.getCurrentPosition(positionArgs);
         return position;
     }
     if (platform === 'web') {
