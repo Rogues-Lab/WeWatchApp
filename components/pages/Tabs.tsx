@@ -39,33 +39,33 @@ const Tabs = ({history}) => {
   useEffect(() => {
     const asnycfn = async () => {
         if (await checkLocationPermissions()) {
-          const position = await getCurrentLocation();
-          updateLocation(position);
-          console.log('set location', position)
+          debugger
+          try {
+            const position = await getCurrentLocation();
+            updateLocation(position);
+            console.log('set location', position)
+          } catch {
+            console.error('failed to get location')
+          }
         }
     }
     asnycfn();
   }, []);
 
   useEffect(() => {
-    const asnycfn = async () => {
-      if (await checkLocationPermissions() == false) {
-        if(userPosition == undefined) {
-          // Lets set the location to the profile location
-          if(authUserProfile && authUserProfile?.longitude && authUserProfile?.latitude) {
-            const deafultProfilePosition = {
-              timestamp: authUserProfile?.updated_at,
-                coords: {
-                    latitude: authUserProfile?.latitude,
-                    longitude: authUserProfile?.longitude,
-                }
-              }
-              updateLocation(deafultProfilePosition);
+    if(userPosition == undefined) {
+      // Lets set the location to the profile location
+      if(authUserProfile && authUserProfile?.longitude && authUserProfile?.latitude) {
+        const deafultProfilePosition = {
+          timestamp: authUserProfile?.updated_at,
+            coords: {
+                latitude: authUserProfile?.latitude,
+                longitude: authUserProfile?.longitude,
             }
+          }
+          updateLocation(deafultProfilePosition);
         }
-      }
     }
-    asnycfn();
   }, [userPosition, authUserProfile])
  
   const handleTabsDidChange = (e: CustomEvent<TabBarChangedEventDetail>) => {
