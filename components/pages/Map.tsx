@@ -17,7 +17,8 @@ import {
   IonFabList,
   IonSegment,
   IonSegmentButton,
-  IonBadge
+  IonBadge,
+  IonToast
 } from '@ionic/react';
 import { search, filter, information, locate } from 'ionicons/icons';
 import Notifications from '../modals/Notifications';
@@ -42,7 +43,7 @@ import { IncidentStore } from '../../store/incident';
 import { Capacitor } from '@capacitor/core';
 import { Geolocation } from '@capacitor/geolocation';
 import { UserStore, updateLocation } from '../../store/user';
-import { getCurrentLocation } from '../util/location';
+import { checkLocationPermissions, getCurrentLocation } from '../util/location';
 
 
 const MapPage = ({history}) => {
@@ -78,6 +79,9 @@ const MapPage = ({history}) => {
   const [unfamiliarFilter, setUnfamiliarFilter] = useState(false);
 
   const [openIconKey, setOpenIconKey] = useState(false);
+
+  const [isToastOpen, setIsToastOpen] = useState<boolean>(false);
+  const [toastMessage, setToastMessage] = useState<string | undefined>();
 
   const [session, setSession] = useState<any>(null);
   // Create a single supabase client for interacting with your database 
@@ -421,16 +425,31 @@ const MapPage = ({history}) => {
   }
 
   const centerMap = async () => {
-    const position = await getCurrentLocation();
-    const center = new mapboxgl.LngLat(position?.coords?.longitude, position?.coords?.latitude)
-    map.current.flyTo({
-      center: center,
-      zoom: zoom,
-      essential: true // this animation is considered essential with respect to prefers-reduced-motion
-    });
+    let gpsAccess = await checkLocationPermissions();
+    let position;
 
-    setLat(position?.coords?.latitude);
-    setLng(position?.coords?.longitude);
+    try {
+      if (gpsAccess) {
+        position = await getCurrentLocation();
+      }
+    } catch {
+      gpsAccess = false;
+    }
+    
+    if (gpsAccess && position?.coords) {
+      const center = new mapboxgl.LngLat(position?.coords?.longitude, position?.coords?.latitude)
+      map.current.flyTo({
+        center: center,
+        zoom: zoom,
+        essential: true // this animation is considered essential with respect to prefers-reduced-motion
+      });
+  
+      setLat(position?.coords?.latitude);
+      setLng(position?.coords?.longitude);
+    } else {
+      setToastMessage('No GPS, please review permissions');
+      setIsToastOpen(true);
+    }
 
   }
 
@@ -538,6 +557,14 @@ const MapPage = ({history}) => {
         </IonFab>
         
         <IconKey open={openIconKey} onDidDismiss={() => setOpenIconKey(false)} />
+        <IonToast
+            isOpen={isToastOpen}
+            message={toastMessage}
+            duration={4000}
+            position={'top'}
+            color={'warning'}
+            onDidDismiss={() => setIsToastOpen(false)}
+          />
       </IonContent>
     </IonPage>
   );

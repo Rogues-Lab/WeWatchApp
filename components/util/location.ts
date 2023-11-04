@@ -15,15 +15,17 @@ export const checkLocationPermissions = async () => {
     }
     if (platform === 'web') {
       console.log('navigator?.geolocation:',navigator?.geolocation);
-      navigator?.geolocation?.getCurrentPosition(
+      await navigator?.geolocation?.getCurrentPosition(
         (position) => {
           console.log('Latitude:', position.coords.latitude);
           console.log('Longitude:', position.coords.longitude);
         },
         (error) => {
           console.error('Error getting location:', error);
+          return false;
         });
       }
+    
     return true;
   };
 
