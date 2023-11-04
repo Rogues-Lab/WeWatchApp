@@ -58,7 +58,7 @@ const MapPage = ({history}) => {
   const [lng, setLng] = useState<number | undefined>();
   const [lat, setLat] = useState<number | undefined>();
   const [distance, setDistance] = useState(10000);
-  const [zoom, setZoom] = useState(13);
+  const [zoom, setZoom] = useState(11);
 
   const [userMarker, setUserMarker] = useState<mapboxgl.Marker | undefined>();
 

@@ -33,6 +33,7 @@ import { checkLocationPermissions, getCurrentLocation } from '../util/location';
 const Tabs = ({history}) => {
   const user = useUser();
   const authUserProfile = useStoreState(UserStore, selectors.getAuthUserProfile);
+  const userPosition = useStoreState(UserStore, selectors.getLocation);
   const location = useLocation();
 
   useEffect(() => {
@@ -46,6 +47,26 @@ const Tabs = ({history}) => {
     asnycfn();
   }, []);
 
+  useEffect(() => {
+    const asnycfn = async () => {
+      if (await checkLocationPermissions() == false) {
+        if(userPosition == undefined) {
+          // Lets set the location to the profile location
+          if(authUserProfile && authUserProfile?.longitude && authUserProfile?.latitude) {
+            const deafultProfilePosition = {
+              timestamp: authUserProfile?.updated_at,
+                coords: {
+                    latitude: authUserProfile?.latitude,
+                    longitude: authUserProfile?.longitude,
+                }
+              }
+              updateLocation(deafultProfilePosition);
+            }
+        }
+      }
+    }
+    asnycfn();
+  }, [userPosition, authUserProfile])
  
   const handleTabsDidChange = (e: CustomEvent<TabBarChangedEventDetail>) => {
     if (e.detail.tab === 'tab4') {
