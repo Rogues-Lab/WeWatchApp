@@ -39,7 +39,6 @@ const Tabs = ({history}) => {
   useEffect(() => {
     const asnycfn = async () => {
         if (await checkLocationPermissions()) {
-          debugger
           try {
             const position = await getCurrentLocation();
             updateLocation(position);

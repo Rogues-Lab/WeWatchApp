@@ -35,7 +35,7 @@ import MessageRow from "./MessageRow";
     }
 
     const viewReportObject = (report) => {
-      debugger;
+      // debugger;
       if (report){
         if (report.mode == "person"){
           window.open(`/admin/users/${report.object_id}`, "_blank");
